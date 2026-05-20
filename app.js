@@ -8,6 +8,11 @@ const jwt = require('jsonwebtoken');
 const port = 3000;
 const Groq = require("groq-sdk");
 require('dotenv').config();
+console.log("Checking URI:", process.env.MONGO_URI); 
+
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("Connected!"))
+  .catch((err) => console.log("Error:", err));
 const userModel = require('./models/user');
 const quizModel = require('./models/quiz');
 const companyModel = require('./models/companies');
