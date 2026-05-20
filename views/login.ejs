@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/png" sizes="16x16" href="/image/favicon.png">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In — PLACEMENT OS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0c0c0e;
+      --panel:     #111114;
+      --border:    rgba(255,255,255,0.07);
+      --muted:     #3a3a44;
+      --text:      #e8e8ec;
+      --subtle:    #7a7a8c;
+      --accent:    #4f7cff;
+      --accent-lo: rgba(79,124,255,0.12);
+      --gold:      #c9a96e;
+      --radius:    12px;
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body:    'DM Sans', system-ui, sans-serif;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 15px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Shell ── */
+    .shell {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 100vh;
+    }
+
+    /* ── LEFT ── */
+    .left {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 52px 56px;
+      background: var(--panel);
+      border-right: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    /* ambient glow */
+    .left::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 55% 55% at 15% 75%, rgba(79,124,255,0.09) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 85% 15%, rgba(201,169,110,0.07) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    /* grid overlay */
+    .left::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: radial-gradient(ellipse 80% 70% at 40% 60%, black 20%, transparent 80%);
+      pointer-events: none;
+    }
+
+    .brand { position: relative; z-index: 1; }
+
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .logo-mark {
+      width: 36px; height: 36px;
+      border: 1.5px solid var(--gold);
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+    }
+
+    .logo-name {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: var(--text);
+    }
+
+    /* Decorative quote card */
+    .quote-card {
+      position: relative;
+      z-index: 1;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px 36px;
+      backdrop-filter: blur(8px);
+    }
+
+    .quote-mark {
+      font-family: var(--font-display);
+      font-size: 64px;
+      line-height: 0.6;
+      color: var(--gold);
+      opacity: 0.5;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .quote-text {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.55;
+      color: var(--text);
+      margin-bottom: 24px;
+    }
+
+    .quote-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4f7cff 0%, #c9a96e 100%);
+      display: grid;
+      place-items: center;
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 500;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .author-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .author-role {
+      font-size: 11px;
+      color: var(--subtle);
+      margin-top: 1px;
+    }
+
+    /* rating stars */
+    .stars {
+      display: flex;
+      gap: 3px;
+      margin-bottom: 14px;
+    }
+
+    .star {
+      width: 13px; height: 13px;
+      fill: var(--gold);
+    }
+
+    .footer-note {
+      position: relative;
+      z-index: 1;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* ── RIGHT ── */
+    .right {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 52px 72px;
+      animation: fadeUp 0.55s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Form header ── */
+    .form-header { margin-bottom: 38px; }
+
+    .form-tag {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .form-title {
+      font-family: var(--font-display);
+      font-size: 38px;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      line-height: 1.15;
+    }
+
+    .form-title em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .form-desc {
+      margin-top: 8px;
+      font-size: 13px;
+      color: var(--subtle);
+      line-height: 1.6;
+    }
+
+    /* ── Fields ── */
+    .fields { display: flex; flex-direction: column; gap: 18px; }
+
+    .field { display: flex; flex-direction: column; gap: 6px; }
+
+    .field-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2px;
+    }
+
+    .field label {
+      font-size: 11.5px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--subtle);
+    }
+
+    .forgot-link {
+      font-size: 11.5px;
+      color: var(--accent);
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .forgot-link:hover { opacity: 0.75; }
+
+    .field-wrap { position: relative; }
+
+    .field-wrap .icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 15px; height: 15px;
+      color: var(--muted);
+      pointer-events: none;
+      transition: color 0.2s;
+      z-index: 1;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 13px 14px 13px 42px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 300;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+      position: relative;
+      z-index: 2;
+    }
+
+    .field input::placeholder { color: var(--muted); }
+
+    .field input:focus {
+      border-color: var(--accent);
+      background: var(--accent-lo);
+      box-shadow: 0 0 0 3px rgba(79,124,255,0.1);
+    }
+
+    .field-wrap:has(input:focus) .icon { color: var(--accent); }
+
+    .eye-btn {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--muted);
+      display: grid;
+      place-items: center;
+      z-index: 3;
+      transition: color 0.2s;
+      padding: 0;
+    }
+    .eye-btn:hover { color: var(--text); }
+
+    /* Remember me */
+    .check-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .check-row input[type="checkbox"] { display: none; }
+
+    .check-box {
+      width: 17px; height: 17px;
+      border: 1.5px solid var(--muted);
+      border-radius: 5px;
+      display: grid;
+      place-items: center;
+      transition: border-color 0.2s, background 0.2s;
+      flex-shrink: 0;
+    }
+
+    .check-box svg {
+      width: 10px; height: 10px;
+      stroke: #fff;
+      stroke-width: 2.5;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+
+    .check-row input:checked ~ .check-box {
+      border-color: var(--accent);
+      background: var(--accent);
+    }
+
+    .check-row input:checked ~ .check-box svg { opacity: 1; }
+
+    .check-label {
+      font-size: 13px;
+      color: var(--subtle);
+    }
+
+    /* ── Divider ── */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── Social buttons ── */
+    .social-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .btn-social {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 11px 14px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 400;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .btn-social:hover {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(255,255,255,0.14);
+    }
+
+    .btn-social svg { flex-shrink: 0; }
+
+    /* ── Submit ── */
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background: var(--accent);
+      border: none;
+      border-radius: var(--radius);
+      color: #fff;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 4px 24px rgba(79,124,255,0.28);
+    }
+
+    .btn-submit::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent);
+      pointer-events: none;
+    }
+
+    .btn-submit:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 30px rgba(79,124,255,0.38);
+    }
+
+    .btn-submit:active { transform: translateY(0); }
+
+    .btn-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    /* ── Footer ── */
+    .form-footer {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--subtle);
+    }
+
+    .form-footer a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .form-footer a:hover { text-decoration: underline; }
+
+    /* ── Responsive ── */
+    @media (max-width: 860px) {
+      .shell { grid-template-columns: 1fr; }
+      .left  { display: none; }
+      .right { padding: 40px 28px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- ── LEFT ── -->
+  <div class="left">
+    <div class="brand">
+      <a href="#" class="logo">
+        <div class="logo-mark">
+          <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="18" height="18">
+            <path d="M9 2L16 6V12L9 16L2 12V6L9 2Z" stroke="#c9a96e" stroke-width="1.4" stroke-linejoin="round"/>
+            <path d="M9 2V16M2 6L16 12M16 6L2 12" stroke="#c9a96e" stroke-width="0.7" opacity="0.5"/>
+          </svg>
+        </div>
+        <span class="logo-name">PLACEMENT OS</span>
+      </a>
+    </div>
+    <div class="quote-card">
+      <span class="quote-mark">"</span>
+      <p class="quote-text">
+        Placement OS completely changed how I prepared for placements. Landed my dream offer in under two months.
+      </p>
+      <div class="quote-author">
+        <div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── RIGHT ── -->
+  <div class="right">
+    <div class="form-header">
+      <div class="form-tag">Welcome back</div>
+      <h2 class="form-title">Sign in to<br><em>your workspace</em></h2>
+      <p class="form-desc">Pick up right where you left off.</p>
+    </div>
+
+    <form action="/login" method="POST" id="loginForm">
+      <div class="fields">
+
+
+        <div class="divider">sign in with email</div>
+
+        <!-- Email -->
+        <div class="field">
+          <label for="email">Email address</label>
+          <div class="field-wrap">
+            <input type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email" />
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="field">
+          <div class="field-row">
+            <label for="password">Password</label>
+            <a href="/forgot-password" class="forgot-link">Forgot password?</a>
+          </div>
+          <div class="field-wrap">
+            <input type="password" id="password" name="password" placeholder="Enter your password" autocomplete="current-password" />
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            <button type="button" class="eye-btn" id="eyeBtn" aria-label="Toggle password">
+              <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Remember me -->
+        <label class="check-row">
+          <input type="checkbox" name="remember" id="remember" />
+          <span class="check-box">
+            <svg viewBox="0 0 12 10" fill="none">
+              <polyline points="1,5 4.5,9 11,1" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="check-label">Keep me signed in for 30 days</span>
+        </label>
+
+        <!-- Submit -->
+        <button type="submit" class="btn-submit">
+          <span class="btn-inner">
+            Sign In
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </span>
+        </button>
+
+      </div>
+    </form>
+
+    <p class="form-footer" style="margin-top:22px;">
+      Don't have an account? <a href="/register">Create one free</a>
+    </p>
+  </div>
+
+</div>
+
+<script>
+  // Password toggle
+  const pw      = document.getElementById('password');
+  const eyeBtn  = document.getElementById('eyeBtn');
+  const eyeIcon = document.getElementById('eyeIcon');
+
+  const open = `<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>`;
+  const off  = `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-10-7-10-7a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 10 7 10 7a18.5 18.5 0 0 1-2.16 3.19"/><line x1="2" y1="2" x2="22" y2="22"/>`;
+
+  eyeBtn.addEventListener('click', () => {
+    const hidden = pw.type === 'password';
+    pw.type = hidden ? 'text' : 'password';
+    eyeIcon.innerHTML = hidden ? off : open;
+  });
+</script>
+</body>
+</html>

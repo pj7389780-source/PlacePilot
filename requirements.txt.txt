@@ -1,0 +1,12 @@
+minor project - 1
+tools and technology 
+javascript
+node.js
+express.js
+nodemon
+jsonwebtoken
+cookie-persur
+mongodb(mongoose)
+
+api key - AIzaSyD0fuWT6ogGAOUAdNoQA3oPVSZA9spKD20
+

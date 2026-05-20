@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/png" sizes="16x16" href="/image/favicon.png">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Top Companies 🚀 — PlacementOS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #f0ede8;
+      --surface: #ffffff;
+      --border: #e2ddd7;
+      --text-primary: #1a1714;
+      --text-secondary: #7a7269;
+      --accent: #d4522a;
+      --accent-light: #f5ede9;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,.06);
+      --shadow-hover: 0 20px 50px rgba(0,0,0,.14);
+      --radius: 16px;
+      --transition: cubic-bezier(.25,.46,.45,.94);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background-color: var(--bg);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .page-wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 64px 32px 96px;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 52px;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-light);
+      padding: 5px 14px;
+      border-radius: 999px;
+      margin-bottom: 20px;
+    }
+
+    .page-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      font-weight: 800;
+      letter-spacing: -.03em;
+      line-height: 1.05;
+      color: var(--text-primary);
+      margin-bottom: 14px;
+    }
+
+    .page-subtitle {
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--text-secondary);
+      max-width: 400px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .controls-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .search-box {
+      position: relative;
+      flex: 1 1 280px;
+      max-width: 420px;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      color: var(--text-secondary);
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 13px 20px 13px 48px;
+      border: 1.5px solid var(--border);
+      border-radius: 999px;
+      background: var(--surface);
+      font-family: 'DM Sans', sans-serif;
+      font-size: .93rem;
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+      outline: none;
+      transition: border-color .2s var(--transition), box-shadow .2s var(--transition);
+    }
+
+    .search-input::placeholder { color: var(--text-secondary); }
+
+    .search-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(212,82,42,.10), var(--shadow-sm);
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 8px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 999px;
+      background: var(--surface);
+      font-family: 'DM Sans', sans-serif;
+      font-size: .8rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all .2s var(--transition);
+      white-space: nowrap;
+    }
+
+    .filter-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .filter-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .result-count {
+      font-size: .82rem;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      padding-left: 2px;
+    }
+
+    .result-count span {
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .company-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .company-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 32px 20px 26px;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      text-decoration: none;
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+      transition: transform .32s var(--transition), box-shadow .32s var(--transition), border-color .22s var(--transition);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      opacity: 0;
+      animation: fadeUp .45s var(--transition) forwards;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .company-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(212,82,42,.06) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity .3s var(--transition);
+    }
+
+    .company-card:hover {
+      transform: translateY(-6px) scale(1.025);
+      box-shadow: var(--shadow-hover);
+      border-color: rgba(212,82,42,.35);
+    }
+
+    .company-card:hover::before { opacity: 1; }
+
+    .company-card.hidden { display: none; }
+
+    .logo-wrap {
+      width: 66px;
+      height: 66px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 16px;
+      background: var(--bg);
+      transition: background .3s var(--transition);
+      flex-shrink: 0;
+    }
+
+    .company-card:hover .logo-wrap { background: var(--accent-light); }
+
+    .logo-wrap svg {
+      width: 38px;
+      height: 38px;
+      transition: transform .3s var(--transition);
+    }
+
+    .company-card:hover .logo-wrap svg { transform: scale(1.12); }
+
+    .company-name {
+      font-family: 'Syne', sans-serif;
+      font-size: .95rem;
+      font-weight: 700;
+      letter-spacing: -.01em;
+      color: var(--text-primary);
+      text-align: center;
+    }
+
+    .company-tag {
+      font-size: .72rem;
+      font-weight: 400;
+      color: var(--text-secondary);
+      letter-spacing: .04em;
+      text-align: center;
+    }
+
+    .card-arrow {
+      position: absolute;
+      top: 13px;
+      right: 16px;
+      font-size: .85rem;
+      color: var(--border);
+      transition: color .25s, transform .25s var(--transition);
+    }
+
+    .company-card:hover .card-arrow {
+      color: var(--accent);
+      transform: translate(3px, -3px);
+    }
+
+    .no-results {
+      display: none;
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-secondary);
+      font-size: .95rem;
+      grid-column: 1 / -1;
+    }
+
+    .no-results.visible { display: block; }
+
+    @media (max-width: 860px) {
+      .company-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 560px) {
+      .page-wrapper { padding: 40px 16px 72px; }
+      .company-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .controls-row { flex-direction: column; align-items: stretch; }
+      .search-box { max-width: 100%; }
+    }
+
+    @media (max-width: 380px) {
+      .company-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-wrapper">
+
+    <header class="page-header">
+    <span class="page-title" style="font-size: 68px;">Placement Prep</span>
+      <h1 class="page-title" style="font-size: 58px;">Top Companies 🚀</h1>
+      <p class="page-subtitle">Select a company to explore its curated interview roadmap.</p>
+    </header>
+
+    <div class="controls-row">
+      <div class="search-box">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input class="search-input" type="text" id="companySearch" placeholder="Search companies…" autocomplete="off" />
+      </div>
+      <div class="filter-tabs" id="filterTabs">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="product">Product</button>
+        <button class="filter-btn" data-filter="service">Service</button>
+        <button class="filter-btn" data-filter="finance">Finance</button>
+      </div>
+    </div>
+
+    <p class="result-count" id="resultCount"><span id="countNum">22</span> companies</p>
+
+    <div class="company-grid" id="companyGrid">
+
+      <a class="company-card" href="/position/google" data-name="google" data-type="product">
+        <span class="card-arrow">↗</span>
+        <div class="logo-wrap">
+          <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <path fill="#4285F4" d="M43.611 20.083H42V20H24v8h11.303C33.654 32.657 29.332 36 24 36c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/>
+            <path fill="#34A853" d="M6.306 14.691l6.571 4.819C14.655 16.108 19.001 13 24 13c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/>
+            <path fill="#FBBC04" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.316 0-9.828-3.418-11.376-8.148l-6.527 5.03C9.505 39.556 16.227 44 24 44z"/>
+            <path fill="#EA4335" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.001-.001 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/>
+          </svg>
+        </div>
+        <span class="company-name">Google</span>
+        <span class="company-tag">Software Engineering</span>
+      </a>
+
+      <a class="company-card" href="/position/microsoft" data-name="microsoft" data-type="product">
+        <span class="card-arrow">↗</span>
+        <div class="logo-wrap">
+          <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3"  y="3"  width="20" height="20" fill="#F25022"/>
+            <rect x="25" y="3"  width="20" height="20" fill="#7FBA00"/>
+            <rect x="3"  y="25" width="20" height="20" fill="#00A4EF"/>
+            <rect x="25" y="25" width="20" height="20" fill="#FFB900"/>
+          </svg>
+        </div>
+        <span class="company-name">Microsoft</span>
+        <span class="company-tag">Software Engineering</span>
+      </a>
+
+      <a class="company-card" href="/position/amazon" data-name="amazon" data-type="product">
+        <span class="card-arrow">↗</span>
+        <div class="logo-wrap">
+          <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <text x="8" y="32" font-family="Arial Black, sans-serif" font-weight="900" font-size="28" fill="#FF9900">a</text>
+            <path d="M8 38 Q24 44 40 38" stroke="#FF9900" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <polygon points="37,35 40,38 37,41" fill="#FF9900"/>
+          </svg>
+        </div>
+        <span class="company-name">Amazon</span>
+        <span class="company-tag">SDE / Cloud</span>
+      </a>
+
+      <a class="company-card" href="/position/adobe" data-name="adobe" data-type="product">
+        <span class="card-arrow">↗</span>
+        <div class="logo-wrap">
+          <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="24,4 44,44 4,44" fill="#FF0000"/>
+            <polygon points="24,16 36,40 12,40" fill="#FF0000"/>
+            <polygon points="24,22 32,40 16,40" fill="#2C0000"/>
+          </svg>
+        </div>
+        <span class="company-name">Adobe</span>
+        <span class="company-tag">SDE / Full Stack Developer</span>
+      </a>
+
+      <a class="company-card" href="/position/meta" data-name="meta" data-type="product">
+        <span class="card-arrow">↗</span>
+        <div class="logo-wrap">
+          <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 24c0-4 2.5-9 6.5-9 2.5 0 4.5 1.5 6.5 4.5 1.5-2.5 3.5-4.5 6-4.5 5 0 7.5 5.5 7.5 9.5 0 3-1 5.5-3 7-1.5 1-3 1-4.5 0-1-.7-2-2-3-4-1 2-2 3.3-3 4-1.5 1-3 1-4.5 0C7 29.5 6 27 6 24z" fill="none" stroke="#0081FB" stroke-width="3.5" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="company-name">Meta</span>
+        <span class="company-tag">Software Engineering</span>
+      </a>
+
+      <a class="company-card" href="/position/netflix" data-name="netflix" data-type="product">
+        <span class="card-arrow">↗</span>
+        <div class="logo-wrap">
+          <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="4" width="40" height="40" rx="4" fill="#141414"/>
+            <text x="13" y="35" font-family="Arial Black, sans-serif" font-weight="900" font-size="30" fill="#E50914">N</text>
+          </svg>
+        </div>
+        <span class="company-name">Netflix</span>
+        <span class="company-tag">SDE / Backend</span>
+      </a>
+
+      <a class="company-card" href="/position/apple" data-name="apple" data-type="product">
+        <span class="card-arrow">↗</span>
+        <div class="logo-wrap">
+          <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <path d="M32.5 10c-2.5.2-5.4 1.7-7.1 3.7-1.5 1.8-2.8 4.5-2.3 7.1 2.7.2 5.5-1.4 7.2-3.4 1.6-1.9 2.7-4.6 2.2-7.4z" fill="#1d1d1f"/>
+            <path d="M38.7 29.5c-1.4-2.5-2-3.8-3.9-5.1-1.2-.8-2.6-1.3-4-1.3-1.9 0-2.7.9-4.8.9-2.2 0-3.2-.9-5.1-.9-1.5 0-3 .5-4.2 1.4-3.5 2.5-5.7 7.5-4.4 12.5.8 3.1 2.5 6 4.7 7.8 1.5 1.2 3 1.8 4.4 1.8 1.9 0 2.9-.9 4.8-.9 1.8 0 2.7.9 4.8.9 1.5 0 3.1-.8 4.6-2.2 1-1 1.8-2.2 2.5-3.5-3-1.4-4.9-4.8-4.4-11.4z" fill="#1d1d1f"/>
+          </svg>
+        </div>
+        <span class="company-name">Apple</span>
+        <span class="company-tag">SDE / Hardware-SW</span>
+      </a>
+
+      <a class="company-card" href="/position/oracle" data-name="oracle" data-type="product">
+        <span class="card-arrow">↗</span>
+        <div class="logo-wrap">
+          <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="15" width="40" height="18" rx="9" fill="#F80000"/>
+            <text x="50%" y="58%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="10" fill="#ffffff" letter-spacing="0.5">ORACLE</text>
+          </svg>
+        </div>
+        <span class="company-name">Oracle</span>
+        <span class="company-tag">SDE / Backend</span>
+      </a>
+
+      <a class="company-card" href="/position/salesforce" data-name="salesforce" data-type="product">
+        <span class="card-arrow">↗</span>
+        <div class="logo-wrap">
+          <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19 12c1.5-1.6 3.5-2.5 5.8-2.5 3.4 0 6.3 2 7.7 4.9.9-.4 1.9-.6 3-.6 4 0 7.2 3.3 7.2 7.4 0 4.1-3.2 7.4-7.2 7.4H14.5C10.9 28.6 8 25.6 8 21.9c0-3.4 2.5-6.2 5.8-6.7C14.6 13.4 16.7 12.2 19 12z" fill="#00A1E0"/>
+          </svg>
+        </div>
+        <span class="company-name">Salesforce</span>
+        <span class="company-tag">SDE / Full Stack Developer</span>
+      </a>
+
+      <a class="company-card" href="/position/uber" data-name="uber" data-type="product">
+        <span class="card-arrow">↗</span>
+        <div class="logo-wrap">
+          <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="4" width="40" height="40" rx="8" fill="#000000"/>
+            <text x="50%" y="62%" dominant-baseline="middle" text-anchor="middle" font-family="Arial Black, sans-serif" font-weight="900" font-size="22" fill="#ffffff">U</text>
+          </svg>
+        </div>
+        <span class="company-name">Uber</span>
+        <span class="company-tag">SDE / Mobility</span>
+      </a>
+
+      <a class="company-card" href="/position/paytm" data-name="paytm" data-type="product">
+        <span class="card-arrow">↗</span>
+        <div class="logo-wrap">
+          <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="4" width="40" height="40" rx="8" fill="#002970"/>
+            <rect x="4" y="4" width="40" height="20" rx="8" fill="#00BAF2"/>
+            <rect x="4" y="20" width="40" height="4" fill="#00BAF2"/>
+            <text x="50%" y="72%" dominant-baseline="middle" text-anchor="middle" font-family="Arial Black, sans-serif" font-weight="900" font-size="11" fill="#ffffff" letter-spacing="0.5">paytm</text>
+          </svg>
+        </div>
+        <span class="company-name">Paytm</span>
+        <span class="company-tag">SDE / Fintech</span>
+      </a>
+
+      <a class="company-card" href="/position/flipkart" data-name="flipkart" data-type="product">
+        <span class="card-arrow">↗</span>
+        <div class="logo-wrap">
+          <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="4" width="40" height="40" rx="8" fill="#2874F0"/>
+            <text x="50%" y="62%" dominant-baseline="middle" text-anchor="middle" font-family="Arial Black, sans-serif" font-weight="900" font-size="22" fill="#ffffff">F</text>
+          </svg>
+        </div>
+        <span class="company-name">Flipkart</span>
+        <span class="company-tag">Full Stack / E-Commerce</span>
+      </a>
+
+      <a class="company-card" href="/position/accenture" data-name="accenture" data-type="service">
+        <span class="card-arrow">↗</span>
+        <div class="logo-wrap">
+          <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <polyline points="10,8 34,24 10,40" fill="none" stroke="#A100FF" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="company-name">Accenture</span>
+        <span class="company-tag">Data Analyst/ Tech</span>
+      </a>
+
+      <a class="company-card" href="/position/capgemini" data-name="capgemini" data-type="service">
+        <span class="card-arrow">↗</span>
+        <div class="logo-wrap">
+          <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <path d="M38 24c0 7.7-6.3 14-14 14S10 31.7 10 24 16.3 10 24 10c4 0 7.6 1.7 10.2 4.4" fill="none" stroke="#12ABDB" stroke-width="5" stroke-linecap="round"/>
+            <circle cx="34" cy="10" r="4" fill="#0070AD"/>
+          </svg>
+        </div>
+        <span class="company-name">Capgemini</span>
+        <span class="company-tag">Product Manager</span>
+      </a>
+
+      <a class="company-card" href="/position/deloitte" data-name="deloitte" data-type="service">
+        <span class="card-arrow">↗</span>
+        <div class="logo-wrap">
+          <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <text x="6" y="34" font-family="Arial, sans-serif" font-weight="300" font-size="26" fill="#1d1d1d" letter-spacing="-1">d.</text>
+            <circle cx="37" cy="33" r="3.5" fill="#86BC25"/>
+          </svg>
+        </div>
+        <span class="company-name">Deloitte</span>
+        <span class="company-tag">Consulting / Data Analyst</span>
+      </a>
+
+      <a class="company-card" href="/position/cognizant" data-name="cognizant" data-type="service">
+        <span class="card-arrow">↗</span>
+        <div class="logo-wrap">
+          <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <path d="M36 24c0 6.6-5.4 12-12 12S12 30.6 12 24 17.4 12 24 12c3.4 0 6.5 1.4 8.7 3.7" fill="none" stroke="#1273C8" stroke-width="5.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span class="company-name">Cognizant</span>
+        <span class="company-tag">AI and Data Scientist</span>
+      </a>
+
+      <a class="company-card" href="/position/infosys" data-name="infosys" data-type="service">
+        <span class="card-arrow">↗</span>
+        <div class="logo-wrap">
+          <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="4" width="40" height="40" rx="6" fill="#007CC3"/>
+            <text x="50%" y="60%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="9.5" fill="#ffffff" letter-spacing="0.3">INFOSYS</text>
+          </svg>
+        </div>
+        <span class="company-name">Infosys</span>
+        <span class="company-tag">IT Services/ Software Architect</span>
+      </a>
+
+      <a class="company-card" href="/position/wipro" data-name="wipro" data-type="service">
+        <span class="card-arrow">↗</span>
+        <div class="logo-wrap">
+          <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="24" cy="24" r="18" fill="none" stroke="#341A5F" stroke-width="4"/>
+            <circle cx="24" cy="24" r="10" fill="#341A5F"/>
+            <path d="M24 6 Q32 14 24 22 Q16 14 24 6z" fill="#7FC241"/>
+          </svg>
+        </div>
+        <span class="company-name">Wipro</span>
+        <span class="company-tag">IT Services/ Product Engineer</span>
+      </a>
+
+      <a class="company-card" href="/position/hcl" data-name="hcl technologies" data-type="service">
+        <span class="card-arrow">↗</span>
+        <div class="logo-wrap">
+          <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="4" width="40" height="40" rx="6" fill="#0F4C81"/>
+            <text x="50%" y="60%" dominant-baseline="middle" text-anchor="middle" font-family="Arial Black, sans-serif" font-weight="900" font-size="12" fill="#ffffff" letter-spacing="0.5">HCL</text>
+          </svg>
+        </div>
+        <span class="company-name">HCL Technologies</span>
+        <span class="company-tag">IT Services/ Full Stack </span>
+      </a>
+
+      <a class="company-card" href="/position/Tata" data-name="tata consultancy services tcs" data-type="service">
+        <span class="card-arrow">↗</span>
+        <div class="logo-wrap">
+          <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="4" width="40" height="40" rx="8" fill="#0033A0"/>
+            <text x="50%" y="58%" dominant-baseline="middle" text-anchor="middle" font-family="Arial Black, sans-serif" font-weight="900" font-size="13" fill="#FFFFFF" letter-spacing="1">TCS</text>
+          </svg>
+        </div>
+        <span class="company-name">Tata Consultancy</span>
+        <span class="company-tag">IT Services/Full Stack</span>
+      </a>
+
+      <a class="company-card" href="/position/goldman-sachs" data-name="goldman sachs" data-type="finance">
+        <span class="card-arrow">↗</span>
+        <div class="logo-wrap">
+          <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="4" width="40" height="40" rx="6" fill="#1E3A5F"/>
+            <text x="50%" y="58%" dominant-baseline="middle" text-anchor="middle" font-family="Arial Black, sans-serif" font-weight="900" font-size="14" fill="#FFFFFF" letter-spacing="1">GS</text>
+          </svg>
+        </div>
+        <span class="company-name">Goldman Sachs</span>
+        <span class="company-tag">Finance /Backend Engineering</span>
+      </a>
+
+      <a class="company-card" href="/position/morgan-stanley" data-name="morgan stanley" data-type="finance">
+        <span class="card-arrow">↗</span>
+        <div class="logo-wrap">
+          <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="4" width="40" height="40" rx="6" fill="#003F72"/>
+            <text x="50%" y="58%" dominant-baseline="middle" text-anchor="middle" font-family="Arial Black, sans-serif" font-weight="900" font-size="13" fill="#FFFFFF" letter-spacing="0.5">MS</text>
+          </svg>
+        </div>
+        <span class="company-name">Morgan Stanley</span>
+        <span class="company-tag">Finance /Backend Engineering</span>
+      </a>
+
+      <p class="no-results" id="noResults">No companies match your search.</p>
+
+    </div>
+
+  </div>
+
+  <script>
+    const searchInput = document.getElementById('companySearch');
+    const filterBtns  = document.querySelectorAll('.filter-btn');
+    const cards       = document.querySelectorAll('.company-card');
+    const noResults   = document.getElementById('noResults');
+    const countNum    = document.getElementById('countNum');
+
+    let activeFilter = 'all';
+
+    function applyAnimationDelays(visibleCards) {
+      visibleCards.forEach((card, i) => {
+        card.style.animationDelay = `${i * 0.04}s`;
+        card.style.opacity = '0';
+        card.style.animation = 'none';
+        void card.offsetWidth;
+        card.style.animation = 'fadeUp .45s cubic-bezier(.25,.46,.45,.94) forwards';
+      });
+    }
+
+    function filterCards() {
+      const q = searchInput.value.trim().toLowerCase();
+      let visible = 0;
+      const visibleCards = [];
+
+      cards.forEach(card => {
+        const nameMatch = card.dataset.name.includes(q);
+        const typeMatch = activeFilter === 'all' || card.dataset.type === activeFilter;
+        const show = nameMatch && typeMatch;
+        card.classList.toggle('hidden', !show);
+        if (show) { visible++; visibleCards.push(card); }
+      });
+
+      noResults.classList.toggle('visible', visible === 0);
+      countNum.textContent = visible;
+      applyAnimationDelays(visibleCards);
+    }
+
+    searchInput.addEventListener('input', filterCards);
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeFilter = btn.dataset.filter;
+        filterCards();
+      });
+    });
+  </script>
+   <a href="/dashboard" style="margin-top: 20px; display: inline-block; color: var(--accent-blue); font-size: 13px;"> Back to dashboard</a>
+<footer style="text-align:center; padding:25px; background:#111; color:#fff;">
+  <p>© 2026 Placement Tracker | Built by Paras</p>
+  <p>contact us at pj7389780@gmail.com</p>
+  <p>
+    <a href="/dashboard">Dashboard</a> |
+    <a href="/problems">Problems</a> |
+    <a href="/companies">Companies</a>
+  </p>
+</footer>
+</body>
+</html>

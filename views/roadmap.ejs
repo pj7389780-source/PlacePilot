@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+        <%= roadmap.title %> — PlacementOS
+    </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #080c14;
+            --surface: rgba(255, 255, 255, 0.04);
+            --border: rgba(255, 255, 255, 0.08);
+            --accent: #63d2ff;
+            --accent2: #a78bfa;
+            --success: #34d399;
+            --text-primary: #f0f4ff;
+            --text-secondary: #7a8ba8;
+            --radius: 16px;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 60px 20px;
+        }
+
+        .container {
+            max-width: 760px;
+            margin: 0 auto;
+        }
+
+        /* Header & Progress Bar */
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .title {
+            font-family: 'Syne', sans-serif;
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 24px;
+        }
+
+        .title span {
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .progress-wrapper {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 999px;
+            height: 12px;
+            width: 100%;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent), var(--success));
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .progress-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Timeline Cards */
+        .timeline {
+            position: relative;
+            padding-left: 20px;
+            border-left: 2px solid var(--border);
+        }
+
+        .phase-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            margin-bottom: 32px;
+            position: relative;
+            transition: border-color 0.3s;
+        }
+
+        .phase-card::before {
+            content: '';
+            position: absolute;
+            left: -29px;
+            top: 32px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--bg);
+            border: 3px solid var(--accent);
+        }
+
+        .phase-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .phase-num {
+            color: var(--accent2);
+        }
+
+        .phase-dur {
+            color: var(--accent);
+            background: rgba(99, 210, 255, 0.1);
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+
+        .phase-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .phase-desc {
+            color: var(--text-secondary);
+            font-size: 15px;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        /* Interactive Milestones */
+        .milestones {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .milestone-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            cursor: pointer;
+            padding: 12px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .milestone-label:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .task-check {
+            appearance: none;
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--text-secondary);
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            flex-shrink: 0;
+            margin-top: 2px;
+            transition: all 0.2s;
+        }
+
+        .task-check:checked {
+            background: var(--success);
+            border-color: var(--success);
+        }
+
+        .task-check:checked::after {
+            content: '✔';
+            position: absolute;
+            color: #080c14;
+            font-size: 14px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .task-text {
+            font-size: 15px;
+            transition: all 0.2s;
+        }
+
+        .task-check:checked+.task-text {
+            color: var(--text-secondary);
+            text-decoration: line-through;
+        }
+
+        .btn-dashboard {
+            display: block;
+            width: 100%;
+            text-align: center;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            margin-top: 40px;
+            transition: background 0.2s;
+        }
+
+        .btn-dashboard:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="header">
+            <h1 class="title"><span>
+                    <%= roadmap.title %>
+                </span></h1>
+
+            <div class="progress-wrapper">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+            <div class="progress-text"><span id="progressPercentage">0</span>% Completed</div>
+        </div>
+
+        <div class="timeline">
+
+            <% roadmap.phases.forEach(function(phase) { %>
+                <div class="phase-card">
+                    <div class="phase-meta">
+                        <span class="phase-num">Phase <%= phase.phaseNumber %></span>
+                        <span class="phase-dur">
+                            <%= phase.duration %>
+                        </span>
+                    </div>
+                    <h2 class="phase-title">
+                        <%= phase.phaseTitle %>
+                    </h2>
+                    <p class="phase-desc">
+                        <%= phase.description %>
+                    </p>
+
+                    <div class="milestones">
+                        <% phase.milestones.forEach(function(milestone) { %>
+                            <label class="milestone-label">
+                                <input type="checkbox" class="task-check" />
+                                <span class="task-text">
+                                    <%= milestone %>
+                                </span>
+                            </label>
+                            <% }) %>
+                    </div>
+                </div>
+                <% }) %>
+
+        </div>
+
+        <a href="/dashboard" class="btn-dashboard">Back to Dashboard</a>
+    </div>
+
+    <script>
+        const checkboxes = document.querySelectorAll('.task-check');
+        const progressBar = document.getElementById('progressBar');
+        const progressPercentage = document.getElementById('progressPercentage');
+
+        function updateProgress() {
+            const totalTasks = checkboxes.length;
+            const completedTasks = document.querySelectorAll('.task-check:checked').length;
+
+            if (totalTasks === 0) return;
+
+            const percentage = Math.round((completedTasks / totalTasks) * 100);
+
+            progressBar.style.width = percentage + '%';
+            progressPercentage.innerText = percentage;
+        }
+
+        // Attach listener to every generated checkbox
+        checkboxes.forEach(box => {
+            box.addEventListener('change', updateProgress);
+        });
+    </script>
+
+</body>
+
+</html>

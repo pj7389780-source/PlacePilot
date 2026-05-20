@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+        <%= company.name %> Opportunities — PlacementOS
+    </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #080c14;
+            --surface: rgba(255, 255, 255, 0.04);
+            --border: rgba(255, 255, 255, 0.08);
+            --accent: #63d2ff;
+            --accent2: #a78bfa;
+            --text-primary: #f0f4ff;
+            --text-secondary: #7a8ba8;
+            --radius: 16px;
+            --radius-sm: 10px;
+            --transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 60px 20px;
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse 60% 40% at 50% 10%, rgba(99, 210, 255, 0.05) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 680px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-block {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .badge {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--accent);
+            background: rgba(99, 210, 255, 0.08);
+            padding: 6px 12px;
+            border-radius: 999px;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .title {
+            font-family: 'Syne', sans-serif;
+            font-size: 36px;
+            font-weight: 800;
+            letter-spacing: -.02em;
+            margin-bottom: 8px;
+        }
+
+        .title span {
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+
+        .config-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            backdrop-filter: blur(24px);
+            padding: 40px;
+            box-shadow: 0 32px 64px rgba(0, 0, 0, 0.4);
+        }
+
+        .section-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 16px;
+        }
+
+        /* Radio Button Styles */
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-bottom: 32px;
+        }
+
+        .radio-input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .radio-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all .25s var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .radio-label:hover {
+            border-color: rgba(99, 210, 255, 0.35);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .radio-input:checked+.radio-label {
+            border-color: var(--accent);
+            background: rgba(99, 210, 255, 0.08);
+            box-shadow: 0 10px 30px rgba(99, 210, 255, 0.1);
+        }
+
+        .radio-input:checked+.radio-label::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--accent);
+        }
+
+        .role-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: var(--text-primary);
+        }
+
+        .role-tag {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .check-circle {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .2s;
+        }
+
+        .check-circle::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent);
+            transform: scale(0);
+            transition: transform .2s cubic-bezier(.175, .885, .32, 1.275);
+        }
+
+        .radio-input:checked+.radio-label .check-circle {
+            border-color: var(--accent);
+        }
+
+        .radio-input:checked+.radio-label .check-circle::after {
+            transform: scale(1);
+        }
+
+        /* Select Dropdown Styles */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        select {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 15px;
+            outline: none;
+            transition: all var(--transition);
+            appearance: none;
+            cursor: pointer;
+        }
+
+        select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 20px rgba(99, 210, 255, 0.1);
+        }
+
+        select option {
+            background: var(--bg);
+            color: var(--text-primary);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 18px;
+            margin-top: 16px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+            color: #0a0e1a;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: 'Syne', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+
+        .btn-submit:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(99, 210, 255, 0.3);
+        }
+
+        .btn-submit:disabled {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.3);
+            cursor: not-allowed;
+        }
+
+        .btn-back {
+            display: block;
+            text-align: center;
+            margin-top: 32px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .btn-back:hover {
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="header-block">
+            <div class="badge">Target Company</div>
+            <h1 class="title"><span>
+                    <%= company.name %>
+                </span> Opportunities</h1>
+            <p class="subtitle">Select your role and provide your context to generate a personalized AI roadmap.</p>
+        </div>
+
+        <div class="config-card">
+            <form action="/generate-roadmap" method="POST" id="roadmapForm">
+
+                <input type="hidden" name="companyName" value="<%= company.name %>" />
+
+                <div class="section-title">1. Select Target Role</div>
+                <div class="radio-group">
+                    <% company.roles.forEach(role=> { %>
+                        <div>
+                            <input type="radio" name="roleTitle" id="role_<%= role.id %>" value="<%= role.title %>"
+                                class="radio-input" required />
+                            <label for="role_<%= role.id %>" class="radio-label">
+                                <div>
+                                    <div class="role-title">
+                                        <%= role.title %>
+                                    </div>
+                                    <div class="role-tag">
+                                        <%= role.tag %>
+                                    </div>
+                                </div>
+                                <div class="check-circle"></div>
+                            </label>
+                        </div>
+                        <% }) %>
+                </div>
+
+                <div class="section-title">2. Personalize Context</div>
+
+                <div class="form-group">
+                    <select name="skillLevel" required>
+                        <option value="" disabled selected>Current Skill Level</option>
+                        <option value="Beginner (Basic Syntax Only)">Beginner (Basic Syntax Only)</option>
+                        <option value="Intermediate (Built Projects, Weak DSA)">Intermediate (Built Projects, Weak DSA)
+                        </option>
+                        <option value="Advanced (Strong DSA, Needs System Design)">Advanced (Strong DSA, Needs System
+                            Design)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <select name="timeCommitment" required>
+                        <option value="" disabled selected>Weekly Time Commitment</option>
+                        <option value="10 - 15 hours / week">10 - 15 hours / week</option>
+                        <option value="20 - 30 hours / week">20 - 30 hours / week</option>
+                        <option value="40+ hours / week">40+ hours / week</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-submit" id="submitBtn">Generate AI Roadmap</button>
+            </form>
+        </div>
+
+        <a href="/companies" class="btn-back">← Back to Companies List</a>
+    </div>
+
+    <script>
+        // Simple validation to ensure a role is selected before submission
+        const form = document.getElementById('roadmapForm');
+        form.addEventListener('submit', (e) => {
+            const roleSelected = document.querySelector('input[name="roleTitle"]:checked');
+            if (!roleSelected) {
+                e.preventDefault();
+                alert('Please select a target role first.');
+            } else {
+                // Optional: Add loading state to button
+                const btn = document.getElementById('submitBtn');
+                btn.innerHTML = 'Generating Roadmap... (This takes a moment)';
+                btn.style.opacity = '0.7';
+            }
+        });
+    </script>
+
+</body>
+
+</html>
