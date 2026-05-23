@@ -115,9 +115,6 @@ app.get('/dashboard', isloggedin, async (req, res) => {
    res.render("das")
 
 });
-app.post('/addpro',isloggedin, async (req, res) => {
-  res.render("addpro")
-})
 
 app.get('/quiz',isloggedin, async (req, res) => {
    res.render("addquiz");
