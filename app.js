@@ -9,6 +9,7 @@ const port = 3000;
 const Groq = require("groq-sdk");
 require('dotenv').config();
 mongoose.connect(process.env.MONGO_URI)
+const PORT = process.env.PORT || 3000;
 const userModel = require('./models/user');
 const quizModel = require('./models/quiz');
 const companyModel = require('./models/companies');
@@ -819,4 +820,6 @@ Return the data STRICTLY in this JSON format:
         res.status(500).send("Failed to generate your personalized roadmap. Please try again.");
     }
 });
-app.listen(port);
+app.listen(PORT, () => {
+  console.log(`Server running on ${PORT}`);
+});
