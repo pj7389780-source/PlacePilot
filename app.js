@@ -116,17 +116,7 @@ app.get('/dashboard', isloggedin, async (req, res) => {
 
 });
 app.post('/addpro',isloggedin, async (req, res) => {
-   let {problemtitle, platform,difficulty, topic, language} = req.body;
-   let problem = await problemModel.create({
-      problemtitle,
-      platform,
-      difficulty,
-      topic,
-      language,
-      userid:req.user.userid
-   })
-   const userid = req.user.userid;
-  res.render("problem")
+  res.render("addpro")
 })
 
 app.get('/quiz',isloggedin, async (req, res) => {
