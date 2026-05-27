@@ -8,5 +8,4 @@ jsonwebtoken
 cookie-persur
 mongodb(mongoose)
 
-api key - AIzaSyD0fuWT6ogGAOUAdNoQA3oPVSZA9spKD20
 
